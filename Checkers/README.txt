@@ -35,6 +35,8 @@ Make sure that Firewalls are turned off for this portion, otherwise you cannot c
 RUNNING THE PROJECT (Once above is completed): 
 Enter into the project folder
 
+Open the folder "batFiles" and move both "CheckersServer.bat" and "CheckersClient.bat" into the root directory of the project (up one level in the directory).
+
 Ensure that the following two files: "mysql-connector-java-5.1.40-bin.jar", "ocsf.jar" are in the same directory
 as the CheckersClient.bat and CheckersServer.bat files.
 
@@ -57,6 +59,21 @@ Once it is your turn (visible via the left-most side of the screen as "Your Turn
 communicate which cells are available for moves.
 
 Enjoy!
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 

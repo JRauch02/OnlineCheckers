@@ -96,113 +96,6 @@ public class GameBoard {
 		pieceRemoved.setKing(false);
 	}
 	
-	public void moveEnemyPiece(BoardCell from, BoardCell to) {
-		//translate row of from to opposite side
-		int iFrom = dictionary.get(from.getRow());
-		//translate column of from to opposite side
-		int jFrom = dictionary.get(from.getColumn());
-		//translate row of to to opposite side
-		int iTo = dictionary.get(to.getRow());
-		//translate column of to to opposite side
-		int jTo = dictionary.get(to.getColumn());
-		// get equivalent cell on opposite side of board
-		from = cells[iFrom][jFrom];
-		// get equivalent cell on opposite side of board
-		to = cells[iTo][jTo];
-		// remove piece picture
-		from.setIcon(null);
-		// set cell to not have a piece
-		from.setPiece(false);
-		// set picture on new cell
-		to.setIcon(greenPiece);
-		// set that the cell does have a piece
-		from.setPiece(true);
-		// set that the piece is green
-		from.setPieceColor(1);
-	}
-	
-	public void movePiece(BoardCell to) {
-		if (determineValidMoves().contains(to) && from.getPieceColor() == 0) {
-			from.setIcon(null);
-			from.setPiece(false);
-			if (from.getPieceColor() == 1) {
-				to.setIcon(greenPiece);
-				to.setPieceColor(1);
-				to.setPiece(true);
-				
-				//THIS LOGIC IS MESSED UP.
-				if (cells[to.getRow()+1][to.getColumn()-1].hasPiece()) {
-					removePiece(cells[to.getRow()+1][to.getColumn()-1]);
-				}
-				if (cells[to.getRow()+1][to.getColumn()+1].hasPiece()) {
-					removePiece(cells[to.getRow()+1][to.getColumn()+1]);
-				}
-			}
-			else if (from.getPieceColor() == 0) {
-				to.setIcon(tanPiece);
-				to.setPieceColor(0);
-				to.setPiece(true);
-				//the following line is for testing translation.
-				// this will not be here in the final, this is just to demonstrate that we can interpret enemy moves to the opposite side for this stuff...
-				//moveEnemyPiece(from, to); //HERE------------+++++++++++++++++++++----------------------
-				//need a way to identify if this was a right move or a left move....
-				//how would this be done?
-				
-				//need try catch in case there would be an error checking the first condition (if it was a jump move)
-				try {
-					//crowning a piece could also be done with similar logic - check if piece is on the opposite row
-					if (to.equals(cells[from.getRow()-2][from.getColumn()-2])) {
-						if (cells[to.getRow()+1][to.getColumn()+1].hasPiece()) {
-							removePiece(cells[to.getRow()+1][to.getColumn()+1]);
-							parent.getSidePanel().pieceTaken();
-							System.out.println("Ate piece on left move!");
-							//probably want some logic to check if there is a rejump available before sending to server
-						}
-					}
-				} catch (Exception e) {
-					System.out.println("Can't check for left move");
-				}
-				
-				try {
-					//crowning a piece could also be done with similar logic - check if piece is on the opposite row
-					if (to.equals(cells[from.getRow()-2][from.getColumn()+2])) {
-						if (cells[to.getRow()+1][to.getColumn()-1].hasPiece()) {
-							removePiece(cells[to.getRow()+1][to.getColumn()-1]);
-							parent.getSidePanel().pieceTaken();
-							System.out.println("Ate piece on right move!");
-							//probably want some logic to check if there is a rejump available before sending to server
-						}
-					}
-				} catch (Exception e) {
-					System.out.println("Can't check for right move");
-				}
-				
-			}
-			from = null;
-			to = null;
-		}
-		else if (from.getPieceColor()==1) {
-			from.setIcon(null);
-			from.setPiece(false);
-			to.setIcon(greenPiece);
-			to.setPieceColor(1);
-			to.setPiece(true);
-			from = null;
-			to = null;
-		}
-		
-		unHighlightPotentialMoves();
-		
-	}
-	
-	public BoardCell[][] getCells() {
-		return cells;
-	}
-	
-	public BoardCell getCell(int row, int column) {
-		return cells[row][column];
-	}
-	
 	public void setPlayerNumber (boolean num) {
 		this.isPlayerOne = num;
 		
@@ -212,30 +105,6 @@ public class GameBoard {
 		else {
 			playerPieceColor = 1;
 		}
-	}
-	
-	public boolean getPlayerNumber () {
-		return isPlayerOne;
-	}
-	
-	public void setFrom(BoardCell from) {
-		this.from = from;
-	}
-	
-	public BoardCell getFrom() {
-		return from;
-	}
-	
-	public void setTo(BoardCell to) {
-		this.to = to;
-	}
-	
-	public void highlightPotentialMoves(String cell) {
-		String[] coordinates = cell.split(",",2);
-		coordinates[0] = coordinates[0].replaceAll("[^0-9]", "");
-		coordinates[1] = coordinates[1].replaceAll("[^0-9]", "");
-		
-		cells[Integer.parseInt(coordinates[0])][Integer.parseInt(coordinates[1])].setBackground(highLightColor);
 	}
 	
 	public void highLightPotentialMoves(List<Integer> coords) {
@@ -261,84 +130,6 @@ public class GameBoard {
 		}
 	}
 	
-	
-	public List<BoardCell> determineValidMoves() {
-		int i = from.getRow();
-		int j = from.getColumn();
-		boolean leftIsPossible = false;
-		boolean rightIsPossible = false;
-		//boolean backLeftIsPossible = false;
-		//boolean backRightIsPossible = false;
-		List<BoardCell> potentialMoves = new ArrayList<BoardCell>();
-		BoardCell rightMove = null;
-		BoardCell leftMove = null;
-		try {
-			leftMove = cells[i-1][j-1];
-		} catch(Exception e) {		
-			System.out.println("couldn't get left move");
-		}
-		try {
-			rightMove = cells[i-1][j+1];
-		} catch (Exception e) {
-			System.out.println("couldn't get right move");
-			
-		}
-		
-		//if tan (player) piece
-		if (from.getPieceColor() == 0) {
-			//if the piece is a king
-			if (from.isKing()) {
-				
-			}
-			//if the piece is a normal piece
-			else if (!from.isKing()) {
-				if (leftMove != null && leftMove.hasPiece()) {
-					if (leftMove.getPieceColor() == 0) {
-						leftIsPossible = false;
-					}
-					else {
-
-						leftMove = cells[leftMove.getRow()-1][leftMove.getColumn()-1];
-						if (!leftMove.hasPiece()) {
-							leftIsPossible = true;
-						}
-					}
-				}
-				else if (leftMove!=null){
-					leftIsPossible = true;
-				}
-				if (rightMove != null && rightMove.hasPiece()) {
-					if (rightMove.getPieceColor() == 0) {
-						rightIsPossible = false;
-					}
-					else {
-
-						rightMove = cells[rightMove.getRow()-1][rightMove.getColumn()+1];
-						if (!rightMove.hasPiece()) {
-							rightIsPossible = true;
-						}
-					}
-				}
-				else if (rightMove !=null) {
-					rightIsPossible = true;
-				}
-			}
-		}
-		if (rightIsPossible) {
-			potentialMoves.add(rightMove);
-		}
-		if (leftIsPossible) {
-			potentialMoves.add(leftMove);
-		}
-		
-		for (BoardCell boardCell : potentialMoves) {
-			//boardCell.setBorder(BorderFactory.createLineBorder(Color.YELLOW));
-			boardCell.setBackground(highLightColor);
-		}
-		
-		return potentialMoves;
-	}
-	
 	//called from addBoard
 	public void setEvents() {
 		hoverEvents = new MouseAdapter() {
@@ -358,19 +149,6 @@ public class GameBoard {
 				GamePanel parent = (GamePanel)clickedCell.getParent();
 				
 				parent.getParent().getChatClient().sendSelectedCell(clickedCell);
-				//if ()
-				/*
-				if (clickedCell.hasPiece()) {
-					//parent.getBoard().setFrom(clickedCell);
-					//parent.getBoard().unHighlightPotentialMoves();
-					//parent.getBoard().determineValidMoves();
-					parent.getParent().getChatClient().sendSelectedCell(clickedCell);
-					
-				}
-				else if (!clickedCell.hasPiece() && parent.getBoard().getFrom() != null) {
-					//parent.getBoard().movePiece(clickedCell);
-					parent.getParent().getChatClient().sendSelectedCell(clickedCell);				}
-					*/
 			}
 		};
 	}
@@ -486,6 +264,6 @@ public class GameBoard {
 	public GameBoard(boolean playerOne, GamePanel parent) {
 		isPlayerOne = playerOne;
 		this.parent = parent;
-		fillTranslationDictionary();
+		//fillTranslationDictionary();
 	}
 }

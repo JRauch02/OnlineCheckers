@@ -2,6 +2,8 @@ package checkers;
 
 import javax.swing.JPanel;
 import javax.swing.JLabel;
+
+import java.awt.Color;
 import java.awt.Font;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -17,7 +19,7 @@ public class IpPanel extends JPanel{
 	
 	public IpPanel(ClientGUI parent) {
 		setLayout(null);
-		
+		this.setBackground(new Color(200,170,130));
 		titleLabel = new JLabel("Enter IP Address of Server:");
 		titleLabel.setFont(new Font("Tahoma", Font.PLAIN, 24));
 		titleLabel.setBounds(138, 173, 298, 48);
@@ -29,7 +31,7 @@ public class IpPanel extends JPanel{
 		serverAddress.setColumns(10);
 		
 		serverAddressLabel = new JLabel("Server Address:");
-		serverAddressLabel.setBounds(138, 247, 89, 14);
+		serverAddressLabel.setBounds(119, 247, 108, 14);
 		add(serverAddressLabel);
 		
 		submitButton = new JButton("Submit");

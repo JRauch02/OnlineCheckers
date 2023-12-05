@@ -205,7 +205,7 @@ public class CheckersClient extends AbstractClient{
 			else {
 				
 				try {
-					Thread.sleep(5);
+					Thread.sleep(250);
 				} catch (InterruptedException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
@@ -296,6 +296,8 @@ public class CheckersClient extends AbstractClient{
 		try {
 			Object testing = loginData.toString();
 			sendToServer("NEW:"+testing);
+			
+			this.username = testing.toString().split(",")[0];
 		} catch(IOException e) {
 			e.printStackTrace();
 		}
